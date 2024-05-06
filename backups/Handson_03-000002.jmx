@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.6.2">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="HandsOn_03" enabled="true">
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+        <collectionProp name="Arguments.arguments"/>
+      </elementProp>
+    </TestPlan>
+    <hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Handson_03" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <stringProp name="LoopController.loops">1</stringProp>
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+        <boolProp name="ThreadGroup.delayedStart">false</boolProp>
+      </ThreadGroup>
+      <hashTree>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="JSR223 Sampler" enabled="true">
+          <stringProp name="scriptLanguage">java</stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="script">import java.io.FileWriter;
+import java.io.IOException;
+
+public class StringManipulation {
+
+    public static void main(String[] args) {
+        // Step 1: Create the strings
+        String s1 = &quot;I am performance Testing&quot;;
+        String s2 = &quot;Performance cost $ many many $&quot;;
+
+        // Step 2: Merge the strings based on count given at runtime
+        int mergeCount = 10; // Set the desired merge count here
+        String combinedString = s1 + &quot; &quot; + s2.repeat(mergeCount);
+
+        // Step 3: Find counts of &quot;performance&quot; word
+        int countPerformance = countWord(combinedString, &quot;performance&quot;);
+        int countPerformanceCaseInsensitive = countWordCaseInsensitive(combinedString, &quot;performance&quot;);
+
+        // Step 4: Replace &quot;Performance&quot; with &quot;Automation&quot; in the merged string
+        String replacedString = combinedString.replaceAll(&quot;(?i)performance&quot;, &quot;Automation&quot;);
+
+        // Step 5: Find the first position of &quot;Automation&quot; word
+        int automationIndex = replacedString.indexOf(&quot;Automation&quot;);
+
+        // Step 6: Write the final string to a file
+        writeToFile(&quot;output.txt&quot;, replacedString);
+
+        // Step 7: Remove all spaces from the string
+        String stringWithoutSpaces = replacedString.replaceAll(&quot;\\s+&quot;, &quot;&quot;);
+
+        // Print the results
+        System.out.println(&quot;Count of &apos;performance&apos; word: &quot; + countPerformance);
+        System.out.println(&quot;Count of &apos;Performance&apos; (case-insensitive): &quot; + countPerformanceCaseInsensitive);
+        System.out.println(&quot;Replaced string: &quot; + replacedString);
+        if (automationIndex != -1) {
+            System.out.println(&quot;Found the word &apos;Automation&apos; at position: &quot; + automationIndex);
+        }
+        System.out.println(&quot;String without spaces: &quot; + stringWithoutSpaces);
+    }
+
+    private static int countWord(String text, String word) {
+        String[] words = text.split(&quot;\\W+&quot;);
+        int count = 0;
+        for (String w : words) {
+            if (w.equals(word)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private static int countWordCaseInsensitive(String text, String word) {
+        String[] words = text.split(&quot;\\W+&quot;);
+        int count = 0;
+        for (String w : words) {
+            if (w.equalsIgnoreCase(word)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private static void writeToFile(String filePath, String content) {
+        try {
+            FileWriter writer = new FileWriter(filePath);
+            writer.write(content);
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}</stringProp>
+        </JSR223Sampler>
+        <hashTree>
+          <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+            <boolProp name="ResultCollector.error_logging">false</boolProp>
+            <objProp>
+              <name>saveConfig</name>
+              <value class="SampleSaveConfiguration">
+                <time>true</time>
+                <latency>true</latency>
+                <timestamp>true</timestamp>
+                <success>true</success>
+                <label>true</label>
+                <code>true</code>
+                <message>true</message>
+                <threadName>true</threadName>
+                <dataType>true</dataType>
+                <encoding>false</encoding>
+                <assertions>true</assertions>
+                <subresults>true</subresults>
+                <responseData>false</responseData>
+                <samplerData>false</samplerData>
+                <xml>false</xml>
+                <fieldNames>true</fieldNames>
+                <responseHeaders>false</responseHeaders>
+                <requestHeaders>false</requestHeaders>
+                <responseDataOnError>false</responseDataOnError>
+                <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+                <assertionsResultsToSave>0</assertionsResultsToSave>
+                <bytes>true</bytes>
+                <sentBytes>true</sentBytes>
+                <url>true</url>
+                <threadCounts>true</threadCounts>
+                <idleTime>true</idleTime>
+                <connectTime>true</connectTime>
+              </value>
+            </objProp>
+            <stringProp name="filename">C:\Users\2272511\Downloads\handson_3(jmeter).txt</stringProp>
+          </ResultCollector>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+      <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+        <boolProp name="ResultCollector.error_logging">false</boolProp>
+        <objProp>
+          <name>saveConfig</name>
+          <value class="SampleSaveConfiguration">
+            <time>true</time>
+            <latency>true</latency>
+            <timestamp>true</timestamp>
+            <success>true</success>
+            <label>true</label>
+            <code>true</code>
+            <message>true</message>
+            <threadName>true</threadName>
+            <dataType>true</dataType>
+            <encoding>false</encoding>
+            <assertions>true</assertions>
+            <subresults>true</subresults>
+            <responseData>false</responseData>
+            <samplerData>false</samplerData>
+            <xml>false</xml>
+            <fieldNames>true</fieldNames>
+            <responseHeaders>false</responseHeaders>
+            <requestHeaders>false</requestHeaders>
+            <responseDataOnError>false</responseDataOnError>
+            <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+            <assertionsResultsToSave>0</assertionsResultsToSave>
+            <bytes>true</bytes>
+            <sentBytes>true</sentBytes>
+            <url>true</url>
+            <threadCounts>true</threadCounts>
+            <idleTime>true</idleTime>
+            <connectTime>true</connectTime>
+          </value>
+        </objProp>
+        <stringProp name="filename"></stringProp>
+      </ResultCollector>
+      <hashTree/>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>
